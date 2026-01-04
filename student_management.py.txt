@@ -1,0 +1,117 @@
+# Student Management System using Python
+# File-based project (Beginner friendly)
+
+FILENAME = "students.txt"
+
+def add_student():
+    roll = input("Enter Roll Number: ")
+    name = input("Enter Name: ")
+    branch = input("Enter Branch: ")
+    marks = input("Enter Marks: ")
+
+    with open(FILENAME, "a") as file:
+        file.write(f"{roll},{name},{branch},{marks}\n")
+
+    print("Student added successfully!\n")
+
+
+def view_students():
+    try:
+        with open(FILENAME, "r") as file:
+            data = file.readlines()
+
+            if not data:
+                print("No records found.\n")
+                return
+
+            print("\n--- Student Records ---")
+            for line in data:
+                roll, name, branch, marks = line.strip().split(",")
+                print(f"Roll: {roll} | Name: {name} | Branch: {branch} | Marks: {marks}")
+            print()
+    except FileNotFoundError:
+        print("No records found.\n")
+
+
+def update_student():
+    roll_to_update = input("Enter Roll Number to update: ")
+    updated = False
+    students = []
+
+    try:
+        with open(FILENAME, "r") as file:
+            students = file.readlines()
+    except FileNotFoundError:
+        print("No records found.\n")
+        return
+
+    with open(FILENAME, "w") as file:
+        for line in students:
+            roll, name, branch, marks = line.strip().split(",")
+            if roll == roll_to_update:
+                name = input("Enter new Name: ")
+                branch = input("Enter new Branch: ")
+                marks = input("Enter new Marks: ")
+                file.write(f"{roll},{name},{branch},{marks}\n")
+                updated = True
+            else:
+                file.write(line)
+
+    if updated:
+        print("Student updated successfully!\n")
+    else:
+        print("Roll number not found.\n")
+
+
+def delete_student():
+    roll_to_delete = input("Enter Roll Number to delete: ")
+    deleted = False
+    students = []
+
+    try:
+        with open(FILENAME, "r") as file:
+            students = file.readlines()
+    except FileNotFoundError:
+        print("No records found.\n")
+        return
+
+    with open(FILENAME, "w") as file:
+        for line in students:
+            roll, _, _, _ = line.strip().split(",")
+            if roll != roll_to_delete:
+                file.write(line)
+            else:
+                deleted = True
+
+    if deleted:
+        print("Student deleted successfully!\n")
+    else:
+        print("Roll number not found.\n")
+
+
+def main():
+    while True:
+        print("==== Student Management System ====")
+        print("1. Add Student")
+        print("2. View Students")
+        print("3. Update Student")
+        print("4. Delete Student")
+        print("5. Exit")
+
+        choice = input("Enter your choice (1-5): ")
+
+        if choice == "1":
+            add_student()
+        elif choice == "2":
+            view_students()
+        elif choice == "3":
+            update_student()
+        elif choice == "4":
+            delete_student()
+        elif choice == "5":
+            print("Exiting program!")
+            break
+        else:
+            print("Invalid choice. Try again.\n")
+
+main()
